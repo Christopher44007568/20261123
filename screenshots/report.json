@@ -1,0 +1,26 @@
+{
+  "glOk": true,
+  "bottomStats": {
+    "totalNodes": 17393,
+    "leafNodes": 13960,
+    "faces": 23746,
+    "batches": 7032,
+    "gpuLeaves": 4648,
+    "bufferReuses": 0,
+    "cameraY": 6.4,
+    "pick": "none"
+  },
+  "pickCheck": {
+    "ok": true,
+    "expected": {
+      "x": 59,
+      "y": 4,
+      "z": 59
+    }
+  },
+  "invariants": {
+    "neighborViolations": 0,
+    "bufferReuses": 10762
+  },
+  "pageErrors": []
+}

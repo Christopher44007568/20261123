@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>废弃盐矿竖井 · 稀疏八叉树体素 LOD</title>
+    <link rel="stylesheet" href="./dist/bundle.css" />
+  </head>
+  <body>
+    <canvas id="gl-canvas"></canvas>
+    <aside id="hud">
+      <h1>盐矿竖井 LOD</h1>
+      <div class="stat"><span>节点总数</span><b id="stat-total">0</b></div>
+      <div class="stat"><span>叶节点数</span><b id="stat-leaves">0</b></div>
+      <div class="stat"><span>面数</span><b id="stat-faces">0</b></div>
+      <div class="stat"><span>批次数</span><b id="stat-batches">0</b></div>
+      <div class="stat"><span>GPU 叶网格</span><b id="stat-gpu">0</b></div>
+      <div class="stat"><span>缓冲复用次数</span><b id="stat-reuse">0</b></div>
+      <div class="stat"><span>相机高度 Y</span><b id="stat-depth">0</b></div>
+      <div class="stat wide"><span>拾取</span><b id="stat-pick">none</b></div>
+
+      <h2>渲染模式</h2>
+      <div class="row">
+        <button data-mode="shaded">1 最终着色</button>
+        <button data-mode="lod">2 LOD 色块</button>
+        <button data-mode="wireframe">3 线框</button>
+      </div>
+      <div class="row">
+        <button id="toggle-boxes">B 叶节点框</button>
+        <button id="toggle-descend">R 自动下降</button>
+      </div>
+
+      <h2>LOD 参数</h2>
+      <label>节点最大面预算 <output id="face-budget-value">512</output>
+        <input id="face-budget" type="range" min="64" max="2048" step="64" value="512" />
+      </label>
+      <label>相邻 LOD 差限制 <output id="neighbor-diff-value">1</output>
+        <input id="neighbor-diff" type="range" min="1" max="3" step="1" value="1" />
+      </label>
+      <label>LOD 距离系数 <output id="lod-scale-value">2.4</output>
+        <input id="lod-scale" type="range" min="0.8" max="6" step="0.2" value="2.4" />
+      </label>
+
+      <h2>操作</h2>
+      <ul class="help">
+        <li>鼠标拖拽环视，滚轮调速</li>
+        <li>WASD 平移，Q/E 下降/上升</li>
+        <li>点击场景拾取体素，P 沿视线拾取</li>
+        <li>R 自动沿竖井下降到底部</li>
+      </ul>
+    </aside>
+    <script type="module" src="./dist/bundle.js"></script>
+  </body>
+</html>
