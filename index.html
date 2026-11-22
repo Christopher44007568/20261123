@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07100f" />
+    <title>Paleo Lightfield Lab</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="brand-text">
+            <strong>PALEOLIGHT</strong>
+            <span>VOLUMETRIC IMAGING UNIT</span>
+          </div>
+        </div>
+        <div class="topbar-title">
+          <span class="eyebrow">SPECIMEN LF-09 / ARCHAEOPTERYX</span>
+          <h1>光场标本棚 <i>09</i></h1>
+        </div>
+        <div class="topbar-meta">
+          <div class="status-pill"><span class="live-dot"></span> 实时合成</div>
+          <div class="clock" id="frameClock">FRAME 0000</div>
+          <button class="icon-button" id="helpButton" aria-label="显示操作说明">?</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel left-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">CAMERA ARRAY</span>
+              <h2>视角网格</h2>
+            </div>
+            <span class="count-badge">9 × 9</span>
+          </div>
+
+          <div class="camera-grid-shell">
+            <div class="grid-corner tl"></div>
+            <div class="grid-corner tr"></div>
+            <div class="grid-corner bl"></div>
+            <div class="grid-corner br"></div>
+            <canvas id="cameraGrid" width="456" height="456"></canvas>
+            <span class="axis-label axis-x">X · +</span>
+            <span class="axis-label axis-y">Y · +</span>
+          </div>
+
+          <div class="position-readout">
+            <div>
+              <span>观察点</span>
+              <strong id="cameraPosition">04.00 / 04.00</strong>
+            </div>
+            <div>
+              <span>轨迹</span>
+              <strong id="trajectoryState">AUTO · 07.4s</strong>
+            </div>
+          </div>
+
+          <div class="array-meta">
+            <div class="meta-row"><span>采集视角</span><b>81 views</b></div>
+            <div class="meta-row"><span>角分辨率</span><b>17.8 mrad</b></div>
+            <div class="meta-row"><span>图层</span><b>Front + Back</b></div>
+            <div class="meta-row"><span>纹理格式</span><b>RGBA8 · LF4D</b></div>
+          </div>
+
+          <div class="layer-legend">
+            <div class="legend-title"><span>深度层</span><span>DEPTH STRATA</span></div>
+            <div class="layer-bar">
+              <span class="layer-segment front"></span>
+              <span class="layer-segment mid"></span>
+              <span class="layer-segment back"></span>
+            </div>
+            <div class="layer-labels">
+              <span>FRONT 1.8m</span>
+              <span>BACK 2.7m</span>
+            </div>
+          </div>
+
+          <div class="quick-stats">
+            <div><strong id="lfStorage">96.4</strong><span>MB 光场</span></div>
+            <div><strong id="captureMs">—</strong><span>ms 采集</span></div>
+          </div>
+        </aside>
+
+        <section class="stage-column">
+          <div class="stage-bar">
+            <div class="stage-labels">
+              <span class="view-index">VIEW <b id="viewIndex">04 / 04</b></span>
+              <span class="divider"></span>
+              <span>合成孔径 <b>F / 0.7</b></span>
+              <span>焦距 <b>52 mm</b></span>
+            </div>
+            <div class="stage-actions">
+              <button class="text-button active" id="autoButton"><span></span> 自动轨迹</button>
+              <button class="text-button" id="revealButton">前后层</button>
+            </div>
+          </div>
+
+          <div class="viewport" id="viewport">
+            <canvas id="sceneCanvas"></canvas>
+            <div class="viewport-grade"></div>
+            <div class="reticle r-tl"></div>
+            <div class="reticle r-tr"></div>
+            <div class="reticle r-bl"></div>
+            <div class="reticle r-br"></div>
+            <div class="view-overlay top-left">
+              <span class="overlay-kicker">NOVEL VIEW SYNTHESIS</span>
+              <strong>连续视角 / CONTINUOUS</strong>
+            </div>
+            <div class="view-overlay top-right">
+              <div class="layer-chip"><i></i> FRONT</div>
+              <div class="layer-chip amber"><i></i> BACK</div>
+            </div>
+            <div class="focus-marker" id="focusMarker">
+              <span></span>
+              <div>FOCUS PLANE<br /><b>2.41 m</b></div>
+            </div>
+            <div class="view-overlay bottom-left">
+              <div class="depth-scale">
+                <span>0.0</span><div></div><span>6.0 m</span>
+              </div>
+              <span class="depth-caption">DEPTH / DISPARITY</span>
+            </div>
+            <div class="view-overlay bottom-right" id="canvasReadout">
+              <span>θ <b id="thetaValue">0.00°</b></span>
+              <span>φ <b id="phiValue">0.00°</b></span>
+              <span>ΔE <b id="deltaEValue">0.12</b></span>
+            </div>
+            <div class="drag-hint" id="dragHint">拖动画面以插值视角</div>
+          </div>
+
+          <div class="trajectory-panel">
+            <div class="trajectory-heading">
+              <div>
+                <span class="eyebrow">FIXED ORBIT VALIDATION</span>
+                <strong>固定轨迹连续性监测</strong>
+              </div>
+              <div class="legend-inline">
+                <span class="mint">合成</span>
+                <span class="amber">误差阈值</span>
+                <span class="muted">跳切</span>
+              </div>
+            </div>
+            <canvas id="trajectoryChart" width="920" height="94"></canvas>
+            <div class="checks">
+              <span><i class="ok"></i> 视角跳切 <b id="popCheck">0.00%</b></span>
+              <span><i class="ok"></i> 轮廓重影 <b id="ghostCheck">0.03 px</b></span>
+              <span><i class="ok"></i> 地面滑移 <b id="slideCheck">0.07 px</b></span>
+              <span class="check-note">81 视角 / 双深度层 / 连续轨迹</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel right-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">COMPARISON</span>
+              <h2>重建对照</h2>
+            </div>
+            <div class="mode-switch" aria-label="视图模式">
+              <button class="active" data-compare="hybrid">SYN</button>
+              <button data-compare="nearest">NEAR</button>
+              <button data-compare="linear">LIN</button>
+            </div>
+          </div>
+
+          <div class="comparison-list">
+            <button class="compare-card active" data-mode="nearest">
+              <div class="compare-image">
+                <canvas id="nearestCanvas" width="240" height="132"></canvas>
+                <span class="image-tag">01</span>
+              </div>
+              <div class="compare-copy">
+                <span class="compare-kicker">NEAREST VIEW</span>
+                <strong>最近视角</strong>
+                <p>硬切采样 · 单视角</p>
+              </div>
+              <span class="compare-value" id="nearestValue">1 src</span>
+            </button>
+
+            <button class="compare-card" data-mode="linear">
+              <div class="compare-image">
+                <canvas id="linearCanvas" width="240" height="132"></canvas>
+                <span class="image-tag">02</span>
+              </div>
+              <div class="compare-copy">
+                <span class="compare-kicker">BILINEAR LIGHT FIELD</span>
+                <strong>线性插值</strong>
+                <p>四邻域混合 · 无视差校正</p>
+              </div>
+              <span class="compare-value" id="linearValue">4 src</span>
+            </button>
+
+            <button class="compare-card current" data-mode="hybrid">
+              <div class="compare-image">
+                <canvas id="hybridCanvas" width="240" height="132"></canvas>
+                <span class="image-tag">03</span>
+                <span class="current-tag">当前</span>
+              </div>
+              <div class="compare-copy">
+                <span class="compare-kicker">DEPTH-WARP + FALLBACK</span>
+                <strong>当前合成</strong>
+                <p>深度重投影 · 前后层组合</p>
+              </div>
+              <span class="compare-value" id="hybridValue">8 src</span>
+            </button>
+          </div>
+
+          <div class="section-rule"></div>
+
+          <div class="metrics-head">
+            <span class="eyebrow">PER-FRAME REPORT</span>
+            <span class="live-label"><i></i> LIVE</span>
+          </div>
+          <div class="metric-hero">
+            <div>
+              <span>采样视角数</span>
+              <strong><b id="sampleCount">8</b><small>/ 81</small></strong>
+            </div>
+            <div class="ring-wrap">
+              <svg viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="22" class="ring-bg"></circle>
+                <circle cx="26" cy="26" r="22" class="ring-fg" id="validRing"></circle>
+              </svg>
+              <div><b id="validRate">97.4</b><small>%</small></div>
+            </div>
+            <div class="ring-label">重投影<br />有效率</div>
+          </div>
+
+          <div class="metric-grid">
+            <div><span>重投影误差</span><strong id="reprojectError">0.34 <small>px</small></strong></div>
+            <div><span>遮挡回退</span><strong id="fallbackRate">2.6 <small>%</small></strong></div>
+            <div><span>层间残差</span><strong id="layerError">0.08 <small>px</small></strong></div>
+            <div><span>时间抖动</span><strong id="temporalJitter">0.01 <small>px</small></strong></div>
+          </div>
+
+          <div class="section-rule"></div>
+
+          <div class="control-block">
+            <div class="control-label">
+              <span>遮挡回退阈值</span>
+              <b id="thresholdValue">0.18 px</b>
+            </div>
+            <input type="range" id="thresholdSlider" min="0.05" max="0.60" step="0.01" value="0.18" />
+            <div class="range-labels"><span>紧 / 层次多</span><span>松 / 稳定</span></div>
+          </div>
+
+          <div class="control-block">
+            <div class="control-label">
+              <span>前后层透视混合</span>
+              <b id="layerMixValue">54%</b>
+            </div>
+            <input type="range" id="layerMixSlider" min="0" max="1" step="0.01" value="0.54" />
+            <div class="range-labels"><span>BACK</span><span>FRONT</span></div>
+          </div>
+
+          <div class="pipeline">
+            <span>LF4D</span><i></i><span>WARP</span><i></i><span>OCCLUSION</span><i></i><span>COMPOSITE</span>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="statusbar">
+        <div class="status-left">
+          <span class="status-item"><i class="dot-green"></i> WEBGL2</span>
+          <span class="status-item">GLSL 3.00 ES</span>
+          <span class="status-item">9×9 × 2 LAYERS</span>
+        </div>
+        <div class="status-center" id="statusMessage">深度重投影就绪 · 四邻域双线性重采样</div>
+        <div class="status-right">
+          <span id="fpsValue">60</span> FPS
+          <span class="sep"></span>
+          <span id="resolutionValue">1920 × 1080</span>
+        </div>
+      </footer>
+
+      <div class="help-popover" id="helpPopover" hidden>
+        <strong>操作</strong>
+        <p>拖动光场画面或左侧相机网格，即可在 9 × 9 相机阵列内部生成连续新视角。</p>
+        <p>蓝色轨迹为固定验证轨道；黄色标记表示深度重投影回退像素。</p>
+        <button id="closeHelp">知道了</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
