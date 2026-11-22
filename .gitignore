@@ -1,0 +1,6 @@
+/build/
+/build-*/
+*.bmp
+*.ppm
+*.png
+energy_trace.csv
