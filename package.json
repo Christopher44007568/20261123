@@ -1,0 +1,23 @@
+{
+  "name": "ridge-station-lens-flare",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Physical lens flare post effect in TypeScript + WebGL2, no third-party runtime libraries.",
+  "scripts": {
+    "build": "tsc -p tsconfig.app.json",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "node --test --import tsx test/*.test.ts",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "puppeteer": "^25.18.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "puppeteer@25.18.1": true
+  }
+}

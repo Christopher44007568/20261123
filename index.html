@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>山脊观测站 · 物理镜头光晕</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; background: #05070c; color: #d8e0ee; font: 13px/1.5 system-ui, sans-serif; }
+      #app { display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+      #panel { padding: 16px; background: #0b101a; border-right: 1px solid #1c2738; overflow-y: auto; }
+      h1 { font-size: 15px; margin: 0 0 4px; }
+      h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #8fa3c4; margin: 18px 0 8px; }
+      #stage { width: 100%; height: 100%; display: block; cursor: grab; }
+      #stage:active { cursor: grabbing; }
+      .mode { display: grid; gap: 6px; }
+      button { background: #16202f; color: #d8e0ee; border: 1px solid #2a3a52; border-radius: 6px; padding: 8px 10px; cursor: pointer; text-align: left; }
+      button:hover { border-color: #4a6388; }
+      button.active { background: #20344f; border-color: #6d92c4; color: #fff; }
+      label { display: block; margin: 10px 0; }
+      input[type=range] { width: 100%; }
+      #runTest { width: 100%; text-align: center; margin-top: 8px; background: #233b26; border-color: #3f6b44; }
+      #testOutput { margin-top: 10px; padding: 10px; background: #070b12; border: 1px solid #1c2738; border-radius: 6px; font-size: 12px; min-height: 40px; }
+      #lightList div { padding: 3px 0; border-bottom: 1px dashed #1c2738; font-size: 12px; color: #a9bad6; }
+      .hint { color: #7d8fae; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <aside id="panel">
+        <h1>物理镜头光晕后期</h1>
+        <p class="hint">TypeScript + WebGL2 + GLSL · 线性 HDR · 深度遮挡 · 零第三方运行时</p>
+
+        <h2>视图模式</h2>
+        <div class="mode">
+          <button data-mode="0">1. 关闭光晕</button>
+          <button data-mode="1">2. 简单屏幕亮度光晕</button>
+          <button data-mode="2" class="active">3. 物理鬼影与光晕（当前实现）</button>
+        </div>
+
+        <h2>镜头参数</h2>
+        <label>曝光
+          <input id="exposure" type="range" min="0.1" max="4" step="0.05" value="1">
+          <span id="exposureValue">1.00</span>
+        </label>
+        <label>焦距
+          <input id="focal" type="range" min="18" max="85" step="1" value="35">
+          <span id="focalValue">35mm</span>
+        </label>
+        <label>光圈
+          <input id="aperture" type="range" min="1.4" max="8" step="0.1" value="2.8">
+          <span id="apertureValue">f/2.8</span>
+        </label>
+
+        <h2>光源状态</h2>
+        <div id="lightList"></div>
+
+        <h2>验证</h2>
+        <button id="runTest">运行 GPU 自检</button>
+        <div id="testOutput">拖动画面环绕山脊观测站，观察灯光被塔架、栏杆与薄板遮挡时的连续消隐。</div>
+      </aside>
+      <canvas id="stage"></canvas>
+    </div>
+    <script type="module" src="./dist/main.js"></script>
+  </body>
+</html>
