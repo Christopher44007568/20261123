@@ -1,0 +1,15 @@
+{
+  "name": "vesper-foveated-observatory",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Foveated tiled rendering console for remote astronomy observation",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "serve": "node scripts/serve.mjs",
+    "verify": "npm run build && node scripts/verify.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

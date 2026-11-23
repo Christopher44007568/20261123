@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#03070d" />
+    <title>VESPER — Foveated Observatory Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./dist/main.js"></script>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="gl-canvas" aria-label="Telescope scene rendered with foveated tiles"></canvas>
+      <canvas id="fov-overlay" aria-hidden="true"></canvas>
+      <div class="grain" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <span class="brand-name">VESPER</span>
+          <span class="brand-divider"></span>
+          <span class="brand-sub">REMOTE OBSERVATORY</span>
+        </div>
+        <div class="top-target">
+          <span class="live-dot"></span>
+          <span>LIVE / N-04</span>
+          <strong>NGC 663</strong>
+          <span class="dim">CASSIOPEIA</span>
+        </div>
+        <div class="top-meta">
+          <span class="link-state"><i></i>DATALINK 1.4 Gb/s</span>
+          <span id="utc-clock">00:00:00 UTC</span>
+          <span class="dim">EXP 180s · LUM</span>
+        </div>
+      </header>
+
+      <section class="scene-card" data-hf="target-card">
+        <div class="eyebrow"><span>FIELD 04</span><span>TEL 2.4m</span></div>
+        <h1>NGC 663</h1>
+        <div class="target-line">OPEN CLUSTER <span>·</span> CASSIOPEIA</div>
+        <div class="coord-grid">
+          <span>RA</span><b>01h 43m 12.4s</b>
+          <span>DEC</span><b>+61° 14′ 06″</b>
+          <span>RADIUS</span><b>0.31°</b>
+        </div>
+        <div class="target-bars">
+          <span style="width: 82%"></span><span style="width: 61%"></span><span style="width: 34%"></span>
+        </div>
+      </section>
+
+      <div class="star-label label-a" data-hf="label-a">
+        <span class="node"></span><span class="leader"></span>
+        <b>HD 15247</b><small>+6.9 · B2V</small>
+      </div>
+      <div class="star-label label-b" data-hf="label-b">
+        <span class="node"></span><span class="leader"></span>
+        <b>TYC 4021-88-1</b><small>+8.1 · A0</small>
+      </div>
+      <div class="star-label label-c" data-hf="label-c">
+        <span class="node"></span><span class="leader"></span>
+        <b>CLUSTER CORE</b><small>24′ FIELD</small>
+      </div>
+
+      <div class="reticle-wrap" data-hf="reticle">
+        <svg class="reticle" viewBox="0 0 260 260" aria-label="Guide crosshair">
+          <g class="reticle-thin">
+            <circle cx="130" cy="130" r="91" stroke-dasharray="1 8" />
+            <circle cx="130" cy="130" r="47" stroke-dasharray="1 5" />
+            <path d="M130 8v58M130 194v58M8 130h58M194 130h58" />
+            <path d="M130 112v36M112 130h36" />
+            <path d="M76 112v36M64 130h24M184 112v36M172 130h24" />
+          </g>
+          <g class="reticle-ticks">
+            <path d="M130 47v6M130 207v6M47 130h6M207 130h6" />
+            <path d="M28 128v4M232 128v4M128 28h4M128 232h4" />
+          </g>
+          <circle class="reticle-core" cx="130" cy="130" r="2.2" />
+        </svg>
+        <div class="reticle-tag tag-top">RETINA LOCK</div>
+        <div class="reticle-tag tag-right" id="reticle-scale">1.00×</div>
+        <div class="reticle-tag tag-bottom">PA 00° 00′</div>
+      </div>
+
+      <section class="readout-rack" data-hf="readout-rack">
+        <div class="rack-head"><span>INSTRUMENT CHAIN</span><span>SYNC</span></div>
+        <div class="readout-row"><span>GUIDE RMS</span><b>0.08″</b><i class="spark"></i></div>
+        <div class="readout-row"><span>FWHM</span><b>1.13″</b><i class="spark alt"></i></div>
+        <div class="readout-row"><span>SKY</span><b>21.4 mag</b><i class="spark"></i></div>
+        <div class="readout-row"><span>ZENITH</span><b>38.2°</b><i class="spark alt"></i></div>
+      </section>
+
+      <div class="saccade-caption">
+        <span class="caption-index" id="saccade-index">01</span>
+        <div>
+          <span>SACCADE TARGET</span>
+          <b id="saccade-label">NGC 663 CORE</b>
+        </div>
+        <span class="caption-progress"><i id="saccade-progress"></i></span>
+      </div>
+
+      <aside class="inspector" id="inspector">
+        <div class="inspector-head">
+          <div>
+            <span class="eyebrow">RENDER PIPELINE / 03</span>
+            <h2>Foveated compositor</h2>
+          </div>
+          <span class="fps-pill" id="fps-pill">-- FPS</span>
+        </div>
+
+        <div class="cost-block">
+          <div class="cost-top">
+            <span>SHADED SAMPLE COST</span>
+            <span id="cost-mode">TILED</span>
+          </div>
+          <div class="cost-value"><strong id="cost-value">0.00</strong><span>MP / FRAME</span></div>
+          <div class="meter"><i id="cost-fill"></i></div>
+          <div class="cost-foot">
+            <span>FULL <b id="reference-cost">0.00 MP</b></span>
+            <span>SAVED <b id="cost-saved">0.0%</b></span>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div><span>RETINA 1×</span><b id="count-retina">0</b></div>
+          <div><span>MID 0.5×</span><b id="count-mid">0</b></div>
+          <div><span>PERIPH 0.25×</span><b id="count-low">0</b></div>
+          <div><span>SEAM δ</span><b id="seam-value">0.0</b></div>
+        </div>
+
+        <section class="panel-section">
+          <div class="section-head">
+            <h3>Tile allocation</h3>
+            <button class="micro-button" id="map-mode" type="button">RATIO</button>
+          </div>
+          <div class="tile-map-wrap">
+            <div class="tile-map" id="tile-map"></div>
+            <span class="gaze-pin" id="gaze-pin"></span>
+          </div>
+          <div class="legend">
+            <span><i class="swatch retina"></i>1.00×</span>
+            <span><i class="swatch mid"></i>0.50×</span>
+            <span><i class="swatch low"></i>0.25×</span>
+            <span class="legend-hf"><i></i>HF protected</span>
+          </div>
+          <div class="block-readout" id="block-readout">BLOCK R04 C05 · 1.00× · MAE 0.00 · SEAM 0.00</div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-head">
+            <h3>Reconstruction</h3>
+            <span class="tiny-state" id="error-state">MEASURING</span>
+          </div>
+          <div class="error-hero">
+            <div><strong id="mae-value">00.00</strong><span>MAE</span></div>
+            <div><strong id="edge-mae-value">00.00</strong><span>EDGE MAE</span></div>
+          </div>
+          <div class="error-line"><span>vs full-res</span><b id="mae-percent">0.00%</b></div>
+          <div class="error-spark" id="error-spark"></div>
+          <div class="recon-note">BILATERAL RECONSTRUCTION · 2.5px BOUNDARY FEATHER</div>
+        </section>
+
+        <section class="panel-section saccade-panel">
+          <div class="section-head">
+            <h3>Saccade path</h3>
+            <span class="tiny-state" id="saccade-state">PLAYING</span>
+          </div>
+          <ol class="saccade-list" id="saccade-list"></ol>
+          <div class="audit-result" id="audit-result">
+            <span class="audit-dot"></span>
+            <span>Ready to verify 6 fixation points</span>
+          </div>
+        </section>
+
+        <div class="inspector-actions">
+          <button id="btn-auto" class="action active" type="button"><i></i>AUTO SACCADE</button>
+          <button id="btn-split" class="action" type="button"><i></i>SPLIT REF</button>
+          <button id="btn-error" class="action" type="button"><i></i>ERROR MAP</button>
+          <button id="btn-audit" class="action audit" type="button"><i></i>RUN AUDIT</button>
+        </div>
+      </aside>
+
+      <div class="split-divider" id="split-divider"><span>FULL RES</span><b>50%</b><span>FOVEATED</span></div>
+      <div class="audit-toast" id="audit-toast"></div>
+
+      <footer class="statusbar">
+        <span><i class="status-led"></i>RENDER STABLE</span>
+        <span id="frame-readout">FRAME 16.7 ms</span>
+        <span id="retile-readout">RETILE 0.00 ms</span>
+        <span id="overlay-readout">HF OVERLAY 1.00×</span>
+        <span id="pixel-ratio-readout">SAMPLE 0.0 MP</span>
+        <span class="status-spacer"></span>
+        <span>G GRID</span>
+        <span>S SACCADE</span>
+        <span>R REFERENCE</span>
+        <span>E ERROR</span>
+      </footer>
+    </main>
+  </body>
+</html>

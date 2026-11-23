@@ -1,0 +1,4 @@
+node_modules/
+dist/
+artifacts/verification.json
+artifacts/*.png
