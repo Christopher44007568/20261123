@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070b0e" />
+    <title>Reservoir Light Field — 滨海收费岛</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="gpu-canvas" aria-label="ReSTIR direct lighting render"></canvas>
+      <div class="grain" aria-hidden="true"></div>
+      <div id="boot" class="boot">
+        <div class="boot-mark"></div>
+        <div class="boot-title">COMPILING LIGHT FIELD</div>
+        <div class="boot-sub">220 WORK LIGHTS · RESERVOIR RESAMPLING · WGSL</div>
+        <div class="boot-track"><i></i></div>
+      </div>
+      <header class="masthead hud">
+        <div class="brand">
+          <span class="brand-index">05</span>
+          <span class="brand-rule"></span>
+          <div>
+            <h1>RESERVOIR LIGHT FIELD</h1>
+            <p>滨海集装箱收费岛 · 实时直接光重采样</p>
+          </div>
+        </div>
+        <div class="status">
+          <span class="live-dot"></span>
+          <span id="status-label">WEBGPU / LIVE</span>
+        </div>
+      </header>
+
+      <aside class="metrics hud" aria-label="Reservoir statistics">
+        <div class="metrics-head">
+          <span>FRAME TELEMETRY</span>
+          <span id="frame-counter">0000</span>
+        </div>
+        <div class="metric primary">
+          <span class="metric-label">RESERVOIR 接受率</span>
+          <strong id="metric-accept">—</strong>
+          <span class="metric-note" id="metric-accept-note">temporal + spatial</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">历史失效率</span>
+          <strong id="metric-history">—</strong>
+          <span class="metric-note">normal / depth / visibility</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">最终权重 W</span>
+          <strong id="metric-weight">—</strong>
+          <span class="metric-note">mean reservoir confidence</span>
+        </div>
+        <div class="metric small">
+          <span class="metric-label">REFERENCE Δ</span>
+          <strong id="metric-error">not sampled</strong>
+          <span class="metric-note">L1 luminance · 220-light reference</span>
+        </div>
+        <div class="metric-chart">
+          <div class="chart-label"><span>ACCEPTANCE</span><span id="chart-value">0%</span></div>
+          <div class="chart-track"><i id="chart-fill"></i></div>
+          <div class="chart-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+        </div>
+      </aside>
+
+      <aside class="controls hud" aria-label="Render controls">
+        <div class="control-head">
+          <span>SAMPLER CONTROLS</span>
+          <span id="resolution-label">—</span>
+        </div>
+        <label class="switch-row" for="spatial-toggle">
+          <span>
+            <b>空间复用</b>
+            <small>4-neighbor reservoir reuse</small>
+          </span>
+          <input id="spatial-toggle" type="checkbox" checked />
+          <i class="switch" aria-hidden="true"></i>
+        </label>
+        <div class="select-row">
+          <label for="view-mode">显示模式</label>
+          <select id="view-mode">
+            <option value="restir">ReSTIR</option>
+            <option value="split">对比：参考 | ReSTIR</option>
+            <option value="reference">参考：220 灯遍历</option>
+            <option value="debug">Reservoir heatmap</option>
+          </select>
+        </div>
+        <div class="range-row">
+          <div><label for="cache-size">历史缓存上限</label><output id="cache-output">32</output></div>
+          <input id="cache-size" type="range" min="4" max="64" step="4" value="32" />
+          <div class="range-ends"><span>4</span><span>64 samples</span></div>
+        </div>
+        <div class="button-row">
+          <button id="pause-button" type="button"><span>Ⅱ</span> 暂停路径</button>
+          <button id="reset-button" type="button"><span>↺</span> 清空历史</button>
+        </div>
+      </aside>
+
+      <footer class="pathbar hud">
+        <div class="path-copy">
+          <span>FIXED CAMERA PATH</span>
+          <b id="camera-phase">ORBIT 000°</b>
+        </div>
+        <div class="path-line">
+          <div class="path-rail"></div>
+          <i id="path-head"></i>
+          <span class="path-node n1"></span>
+          <span class="path-node n2"></span>
+          <span class="path-node n3"></span>
+          <span class="path-node n4"></span>
+        </div>
+        <div class="path-legend">
+          <span><i class="swatch warm"></i>工作灯 220</span>
+          <span><i class="swatch teal"></i>金属货柜</span>
+          <span><i class="swatch amber"></i>交叠灯区</span>
+        </div>
+      </footer>
+
+      <div id="toast" class="toast"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
