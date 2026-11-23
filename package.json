@@ -1,0 +1,19 @@
+{
+  "name": "night-harbor-lens-rain",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "tsx --test tests/*.test.ts",
+    "test:browser": "node scripts/validate.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2"
+  }
+}
