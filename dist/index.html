@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>夜班调度站 · Async Light Grid</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="gpu" aria-label="夜间矿区调度站实时三维场景"></canvas>
+      <div class="screen-vignette" aria-hidden="true"></div>
+      <div class="scanlines" aria-hidden="true"></div>
+
+      <div id="boot" class="boot">
+        <div class="boot-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="boot-kicker">SECTOR 07 / DISPATCH CONTROL</p>
+        <h2>正在校准光源分块</h2>
+        <p id="boot-detail">请求 WebGPU 适配器 · 建立有界帧槽</p>
+        <div class="boot-line"><i></i></div>
+        <p id="boot-error" class="boot-error" hidden></p>
+      </div>
+
+      <div id="hud" class="hud" aria-hidden="false">
+        <header class="masthead">
+          <div class="brand">
+            <div class="brand-rule">
+              <span>NGM</span>
+              <i></i>
+              <span>SECTOR 07</span>
+            </div>
+            <p class="eyebrow">
+              <span class="live-dot"></span>
+              NIGHT ORE DISPATCH
+              <span class="eyebrow-sep">/</span>
+              SHIFT B
+            </p>
+            <h1>夜班调度站</h1>
+            <p class="subtitle">LIGHT GRID <b>16 × 9</b> · FRAME SLOTS <b>03</b></p>
+          </div>
+          <div class="clock-block">
+            <span class="clock-label">STATION TIME</span>
+            <strong id="system-clock">23:41:08</strong>
+            <span class="clock-zone">CST / UTC+08</span>
+          </div>
+        </header>
+
+        <section class="pipeline-status" id="status-pill" data-state="boot">
+          <span class="status-orbit" aria-hidden="true"><i></i></span>
+          <div>
+            <strong id="status-text">ASYNC PIPELINE</strong>
+            <small id="status-detail">等待首帧完成围栏</small>
+          </div>
+        </section>
+
+        <aside class="panel slots-panel" aria-label="帧槽状态">
+          <header class="panel-head">
+            <span>FRAME SLOTS</span>
+            <b><i id="slot-ready-count">0</i> / 3 VALID</b>
+          </header>
+          <div class="slot-list">
+            <article class="slot-card" id="slot-0" data-state="free">
+              <div class="slot-top">
+                <span class="slot-index">SLOT 00</span>
+                <span class="slot-state">FREE</span>
+              </div>
+              <div class="slot-track"><i></i></div>
+              <div class="slot-meta">
+                <span>FENCE</span>
+                <b class="slot-frame">--</b>
+              </div>
+            </article>
+            <article class="slot-card" id="slot-1" data-state="free">
+              <div class="slot-top">
+                <span class="slot-index">SLOT 01</span>
+                <span class="slot-state">FREE</span>
+              </div>
+              <div class="slot-track"><i></i></div>
+              <div class="slot-meta">
+                <span>FENCE</span>
+                <b class="slot-frame">--</b>
+              </div>
+            </article>
+            <article class="slot-card" id="slot-2" data-state="free">
+              <div class="slot-top">
+                <span class="slot-index">SLOT 02</span>
+                <span class="slot-state">FREE</span>
+              </div>
+              <div class="slot-track"><i></i></div>
+              <div class="slot-meta">
+                <span>FENCE</span>
+                <b class="slot-frame">--</b>
+              </div>
+            </article>
+          </div>
+          <div class="slot-legend">
+            <span><i class="dot-free"></i>空闲</span>
+            <span><i class="dot-busy"></i>计算中</span>
+            <span><i class="dot-ready"></i>已完成</span>
+            <span><i class="dot-lock"></i>渲染占用</span>
+          </div>
+          <div class="queue-note">
+            <span>BOUNDED QUEUE</span>
+            <b id="queue-note">NO OVERWRITE</b>
+          </div>
+        </aside>
+
+        <aside class="panel metrics-panel" aria-label="GPU 阶段耗时">
+          <header class="panel-head">
+            <span>GPU STAGES</span>
+            <b id="gpu-api">TIMESTAMP QUERY</b>
+          </header>
+          <div class="stage-row" data-stage="compute">
+            <div class="stage-copy">
+              <span>COMPUTE</span>
+              <small>visibility + bins</small>
+            </div>
+            <strong id="metric-compute">--</strong><em>ms</em>
+            <div class="stage-meter"><i id="compute-meter"></i></div>
+          </div>
+          <div class="stage-row" data-stage="render">
+            <div class="stage-copy">
+              <span>RENDER</span>
+              <small>opaque + light halos</small>
+            </div>
+            <strong id="metric-render">--</strong><em>ms</em>
+            <div class="stage-meter"><i id="render-meter"></i></div>
+          </div>
+          <div class="metric-grid">
+            <div>
+              <span>COMPUTE WAIT</span>
+              <b><i id="metric-wait">--</i> ms</b>
+            </div>
+            <div>
+              <span>P95 TAIL</span>
+              <b><i id="metric-tail">--</i> ms</b>
+            </div>
+            <div>
+              <span>STALE AGE</span>
+              <b><i id="metric-stale">0</i> frames</b>
+            </div>
+            <div>
+              <span>OVERWRITE BLOCK</span>
+              <b><i id="metric-drops">0</i> drops</b>
+            </div>
+          </div>
+          <footer class="fence-foot">
+            <span>EXPLICIT FENCES</span>
+            <b id="fence-count">0</b>
+            <span>·</span>
+            <b id="recycle-count">0</b>
+            <span>recycles</span>
+          </footer>
+        </aside>
+
+        <section class="camera-readout" aria-label="相机时间轴">
+          <div>
+            <span>CAMERA LOOP</span>
+            <strong id="timecode">00:00:00:00</strong>
+          </div>
+          <div class="camera-track">
+            <i id="camera-fill"></i>
+            <span id="camera-playhead"></span>
+          </div>
+          <span class="camera-tag">FIXED ORBIT / 18 SEC</span>
+        </section>
+
+        <section class="deck panel" aria-label="播放控制">
+          <div class="deck-group mode-group">
+            <span class="deck-label">PIPELINE</span>
+            <div class="segmented" role="group" aria-label="执行模式">
+              <button type="button" data-mode="sync">SYNC <small>同步</small></button>
+              <button type="button" data-mode="async" class="active">ASYNC <small>异步</small></button>
+            </div>
+          </div>
+          <div class="deck-divider"></div>
+          <div class="deck-group play-group">
+            <button class="icon-button" id="btn-pause" type="button" aria-label="暂停相机">
+              <span id="pause-icon">Ⅱ</span>
+            </button>
+            <div>
+              <span class="deck-label">PLAYBACK</span>
+              <b id="playback-state">RUNNING</b>
+            </div>
+          </div>
+          <div class="deck-divider"></div>
+          <div class="deck-group load-group">
+            <span class="deck-label">COMPUTE LOAD</span>
+            <div class="segmented compact" role="group" aria-label="计算负载">
+              <button type="button" data-load="1" class="active">1×</button>
+              <button type="button" data-load="4">4×</button>
+              <button type="button" data-load="12">12×</button>
+              <button type="button" data-load="24">24×</button>
+            </div>
+          </div>
+          <div class="deck-spacer"></div>
+          <div class="deck-stat">
+            <span>FPS</span>
+            <b id="fps">--</b>
+          </div>
+          <div class="deck-stat">
+            <span>DISPLAY</span>
+            <b id="display-frame">F000</b>
+          </div>
+          <button class="verify-button" id="btn-verify" type="button">
+            <span>RUN A/B CHECK</span>
+            <small>帧一致性验证</small>
+          </button>
+        </section>
+
+        <div class="status-ribbon" id="status-ribbon" data-kind="ok">
+          <span></span>
+          <b id="ribbon-text">PIPELINE READY</b>
+          <small id="ribbon-detail">上一有效帧保持显示</small>
+        </div>
+      </div>
+
+      <section class="verify-dialog" id="verify-dialog" hidden aria-live="polite">
+        <header>
+          <div>
+            <span>PIPELINE AUDIT</span>
+            <h2>同步 / 异步一致性</h2>
+          </div>
+          <button id="verify-close" type="button" aria-label="关闭验证">×</button>
+        </header>
+        <p class="verify-intro">
+          以固定相机帧执行两组 GPU 通道，读回像素并比较哈希；同时检查帧槽围栏和降级计数。
+        </p>
+        <div id="verify-list" class="verify-list"></div>
+        <div class="verify-summary" id="verify-summary">
+          <span>WAITING</span>
+          <b>准备验证</b>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
