@@ -1,0 +1,73 @@
+{
+  "scene": "salt_lake_spectral_tower",
+  "renderer": "C++17 stdlib CPU spectral path tracer",
+  "camera": {"origin": [0.55, 2.95, 8.25], "target": [0.35, 1.34, -0.55], "fov_degrees": 39.0, "resolution": [1024, 576]},
+  "hero_wavelength_sampling": {"bands": 16, "heroes_stratified_per_pixel": true, "companion_bands_share_camera_ray_and_rng": true},
+  "band_range_nm": [400, 720],
+  "rgb_approximation_primaries_nm": [620, 545, 460],
+  "spectral_integration": "CIE 1931 XYZ analytic fit, D65-independent equal-energy white balance",
+  "prebaked_rainbow_texture": false,
+  "passes": {
+    "low": {"samples_per_band": 8, "hero_photons_per_band": 40000, "seconds": 25.76917837},
+    "high": {"samples_per_band": 64, "hero_photons_per_band": 200000, "seconds": 140.5721331}
+  },
+  "checks": {
+    "all_pass": true,
+    "band_energy_converged": true,
+    "max_band_image_relative_delta": 7.151118325e-05,
+    "mean_band_image_relative_delta": 4.013554609e-05,
+    "max_band_receiver_relative_delta": 0.006735814796,
+    "geometry_edges_identical_across_wavelengths": true,
+    "geometry_edge_pixels": 5137,
+    "geometry_edge_hash_low": "38d74aa739b0aebe",
+    "geometry_edge_hash_high": "38d74aa739b0aebe",
+    "geometry_edge_misalignment_pixels": 0,
+    "dispersion_visible": true,
+    "mirror_present": true
+  },
+  "white_light": {"source_energy_per_pass": 1.0, "low_receiver_energy": 0.5706180275, "high_receiver_energy": 0.5706104439, "rgb_approx_receiver_energy": 0.5855345439},
+  "image_luminance_energy": {"spectral_high": 24997.09374, "rgb_approx_high": 25577.57933},
+  "metal_reflection_color_cast": {"mirror_pixels": 11652, "spectral_red_blue_ratio": 2.286084149, "rgb_approx_red_blue_ratio": 3.888768391},
+  "dispersion_centroids": [
+    {"lambda_nm": 410, "x": 1.328594297, "y": 1.432340456, "z": -1.308820017, "receiver_power": 0.04347970128},
+    {"lambda_nm": 430, "x": 1.648871065, "y": 1.409769817, "z": -1.305281258, "receiver_power": 0.0443616951},
+    {"lambda_nm": 450, "x": 1.988222677, "y": 1.385307186, "z": -1.306023065, "receiver_power": 0.04503783072},
+    {"lambda_nm": 470, "x": 2.359482924, "y": 1.358601273, "z": -1.312911991, "receiver_power": 0.04570520077},
+    {"lambda_nm": 490, "x": 2.825049764, "y": 1.329435606, "z": -1.323582746, "receiver_power": 0.04625208584},
+    {"lambda_nm": 510, "x": 3.405904103, "y": 1.293652564, "z": -1.344935513, "receiver_power": 0.04682882321},
+    {"lambda_nm": 530, "x": 3.937875673, "y": 1.257179738, "z": -1.378195003, "receiver_power": 0.04491179275},
+    {"lambda_nm": 550, "x": 4.264075354, "y": 1.231838515, "z": -1.403066132, "receiver_power": 0.03835405561},
+    {"lambda_nm": 570, "x": 4.252552758, "y": 1.229953394, "z": -1.343219519, "receiver_power": 0.03076260258},
+    {"lambda_nm": 590, "x": 3.741880113, "y": 1.264004638, "z": -1.114193846, "receiver_power": 0.02526467347},
+    {"lambda_nm": 610, "x": 2.927192794, "y": 1.320982868, "z": -0.7809856323, "receiver_power": 0.02316353581},
+    {"lambda_nm": 630, "x": 2.327739061, "y": 1.364046264, "z": -0.5288968229, "receiver_power": 0.02384598818},
+    {"lambda_nm": 650, "x": 2.177736785, "y": 1.376803088, "z": -0.422355477, "receiver_power": 0.02588907333},
+    {"lambda_nm": 670, "x": 2.217766334, "y": 1.375904259, "z": -0.3855571554, "receiver_power": 0.02792883391},
+    {"lambda_nm": 690, "x": 2.249564037, "y": 1.374823531, "z": -0.3530085225, "receiver_power": 0.02922303622},
+    {"lambda_nm": 710, "x": 2.272581785, "y": 1.374244214, "z": -0.326683562, "receiver_power": 0.02960151509}
+  ],
+  "rgb_approx_centroids": [
+    {"lambda_nm": 620, "x": 2.565358199, "y": 1.34652991, "z": -0.6511561545, "receiver_power": 0.1246407983},
+    {"lambda_nm": 545, "x": 4.186660618, "y": 1.237888456, "z": -1.40260091, "receiver_power": 0.2183847799},
+    {"lambda_nm": 460, "x": 2.144502003, "y": 1.373314712, "z": -1.309324618, "receiver_power": 0.2425089657}
+  ],
+  "band_convergence": [
+    {"lambda_nm": 410, "low_image_energy": 25378.37163, "high_image_energy": 25379.75319, "relative_delta": 5.443551505e-05},
+    {"lambda_nm": 430, "low_image_energy": 25336.9135, "high_image_energy": 25338.18078, "relative_delta": 5.001471722e-05},
+    {"lambda_nm": 450, "low_image_energy": 25296.72014, "high_image_energy": 25298.02263, "relative_delta": 5.148595265e-05},
+    {"lambda_nm": 470, "low_image_energy": 25222.06682, "high_image_energy": 25222.83562, "relative_delta": 3.048024061e-05},
+    {"lambda_nm": 490, "low_image_energy": 25117.18135, "high_image_energy": 25118.07093, "relative_delta": 3.541613686e-05},
+    {"lambda_nm": 510, "low_image_energy": 25061.27151, "high_image_energy": 25062.46036, "relative_delta": 4.743583456e-05},
+    {"lambda_nm": 530, "low_image_energy": 25043.21381, "high_image_energy": 25044.58148, "relative_delta": 5.460930016e-05},
+    {"lambda_nm": 550, "low_image_energy": 25004.2634, "high_image_energy": 25005.41399, "relative_delta": 4.601395278e-05},
+    {"lambda_nm": 570, "low_image_energy": 24970.27674, "high_image_energy": 24972.06253, "relative_delta": 7.151118325e-05},
+    {"lambda_nm": 590, "low_image_energy": 24928.87737, "high_image_energy": 24930.18833, "relative_delta": 5.258534492e-05},
+    {"lambda_nm": 610, "low_image_energy": 24896.81664, "high_image_energy": 24897.49061, "relative_delta": 2.706960094e-05},
+    {"lambda_nm": 630, "low_image_energy": 24868.36204, "high_image_energy": 24869.57916, "relative_delta": 4.893988633e-05},
+    {"lambda_nm": 650, "low_image_energy": 24838.48905, "high_image_energy": 24839.57678, "relative_delta": 4.379042039e-05},
+    {"lambda_nm": 670, "low_image_energy": 24800.43293, "high_image_energy": 24800.53827, "relative_delta": 4.247540184e-06},
+    {"lambda_nm": 690, "low_image_energy": 24753.59522, "high_image_energy": 24754.06083, "relative_delta": 1.880925072e-05},
+    {"lambda_nm": 710, "low_image_energy": 24701.70097, "high_image_energy": 24701.83248, "relative_delta": 5.323860721e-06}
+  ],
+  "notes": "Receiver centroids are energy-weighted spectral photon hit positions. Object silhouettes share one wavelength-independent camera/geometry buffer; dispersion changes only transported light, never geometry."
+}
