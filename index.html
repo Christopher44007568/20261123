@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>火山地貌教学沙盘 — NPR 卡通着色</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #eef2f5; overflow: hidden; }
+    #view { display: block; width: 100vw; height: 100vh; }
+    /* 图例与水基线标注:DOM 覆盖层,不参与 WebGL 风格化 */
+    #legend {
+      position: fixed; left: 16px; bottom: 16px; padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.92); border: 1px solid #9aa4ab;
+      border-radius: 6px; font: 13px/1.6 "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #222; pointer-events: none;
+    }
+    #legend .row { display: flex; align-items: center; gap: 8px; }
+    #legend .sw { width: 14px; height: 14px; border: 1px solid #666; display: inline-block; }
+    #waterline {
+      position: fixed; right: 18px; top: 16px; padding: 6px 10px;
+      background: rgba(255,255,255,0.92); border: 1px solid #9aa4ab; border-radius: 6px;
+      font: 13px/1.4 "PingFang SC", "Microsoft YaHei", sans-serif; color: #1a4a7a;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="view"></canvas>
+  <div id="legend">
+    <div><b>图例 · 海拔色阶(每级 6 m)</b></div>
+    <div class="row"><span class="sw" style="background:#7ec850"></span>0–6 m 低地</div>
+    <div class="row"><span class="sw" style="background:#d9b84a"></span>12–18 m 台地</div>
+    <div class="row"><span class="sw" style="background:#8c5a30"></span>30–36 m 山地</div>
+    <div class="row"><span class="sw" style="background:#f0f0f5"></span>&ge;48 m 峰顶</div>
+    <div class="row"><span class="sw" style="background:#e05908"></span>熔岩沟槽</div>
+  </div>
+  <div id="waterline">水体基线 h = 1.5 m(未风格化)</div>
+  <script src="dist/bundle.js"></script>
+</body>
+</html>
