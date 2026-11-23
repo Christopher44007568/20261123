@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>海岸悬崖 · Meshlet 虚拟几何</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="gpu-canvas" aria-label="WebGPU coastal cliff renderer"></canvas>
+      <img id="readback-image" alt="WebGPU 帧回读" />
+      <div class="vignette"></div>
+      <header class="masthead">
+        <div class="eyebrow">WEBGPU · VIRTUAL GEOMETRY STUDY</div>
+        <h1>海岸悬崖考古遗址</h1>
+        <p>固定 seed 程序化源网格 · meshlet 间接绘制</p>
+      </header>
+      <section class="telemetry" aria-live="polite">
+        <div class="telemetry-head">
+          <span>GPU FRAME</span>
+          <span id="gpu-status" class="status"><i></i>初始化</span>
+        </div>
+        <div class="metric hero">
+          <span class="metric-label">提交三角形</span>
+          <strong id="stat-triangles">—</strong>
+          <span id="stat-clusters" class="metric-sub">— clusters</span>
+        </div>
+        <div class="metric-grid">
+          <div><span>源网格</span><b id="stat-source">—</b></div>
+          <div><span>候选 meshlet</span><b id="stat-candidates">—</b></div>
+          <div><span>驻留页面</span><b id="stat-resident">—</b></div>
+          <div><span>L2 回退 / 覆盖</span><b id="stat-fallback">—</b></div>
+        </div>
+        <div class="lod-block">
+          <div class="lod-title">LOD 分布 / 切换</div>
+          <div class="lod-row"><span class="lod l0">L0</span><b id="lod0">—</b><em id="sw0">—</em></div>
+          <div class="lod-row"><span class="lod l1">L1</span><b id="lod1">—</b><em id="sw1">—</em></div>
+          <div class="lod-row"><span class="lod l2">L2</span><b id="lod2">—</b><em id="sw2">—</em></div>
+          <div class="lod-row"><span class="lod l3">L3</span><b id="lod3">—</b><em id="sw3">—</em></div>
+        </div>
+        <div class="verify-line">
+          <span id="verify-state">CPU 参考待采样</span>
+          <span id="compare-state">—</span>
+        </div>
+      </section>
+      <aside class="legend" id="legend">
+        <div><span class="swatch final"></span>最终着色</div>
+        <div><span class="swatch cluster"></span>Cluster 色块</div>
+        <div><span class="swatch density"></span>三角形密度</div>
+      </aside>
+      <footer class="controls">
+        <div class="control-group view-group" role="group" aria-label="视图模式">
+          <button class="mode active" data-mode="0"><kbd>1</kbd>最终着色</button>
+          <button class="mode" data-mode="1"><kbd>2</kbd>Cluster</button>
+          <button class="mode" data-mode="2"><kbd>3</kbd>三角形密度</button>
+        </div>
+        <div class="control-group">
+          <button id="play">暂停巡航</button>
+          <button id="restart">从远海重放</button>
+        </div>
+        <div class="control-group altitude">
+          <button id="down" title="沿悬崖下降">↓ 下降</button>
+          <button id="up" title="沿悬崖上升">↑ 上升</button>
+        </div>
+        <div class="progress-wrap">
+          <span>远海</span>
+          <input id="progress" type="range" min="0" max="1000" value="0" aria-label="相机路径" />
+          <span>遗址近景</span>
+        </div>
+      </footer>
+      <div id="loading" class="loading">
+        <div class="loading-card">
+          <div class="loader"></div>
+          <h2>生成 3,997,696 三角形</h2>
+          <p id="loading-detail">构建 488 个页面与 41,480 个 meshlet…</p>
+        </div>
+      </div>
+      <div id="error" class="error" hidden></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

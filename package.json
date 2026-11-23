@@ -1,0 +1,22 @@
+{
+  "name": "coastal-cliff-vgeo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "test": "tsx --test tests/*.test.ts",
+    "verify": "xvfb-run -a -s '-screen 0 1440x900x24' tsx scripts/verify.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/pngjs": "^6.0.5",
+    "@webgpu/types": "^0.1.74",
+    "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  }
+}
