@@ -1,0 +1,19 @@
+{
+  "name": "lunar-horizon-culling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lunar base inspection demo: planetary-curvature horizon culling over a BVH, TypeScript + WebGPU + WGSL",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "esbuild src/app/main.ts --bundle --format=esm --outfile=dist/bundle.js",
+    "sim": "node src/sim/walk.ts",
+    "serve": "npm run build && python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@webgpu/types": "^0.1.44",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0"
+  }
+}
