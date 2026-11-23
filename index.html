@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>风洞毛发渲染实验台</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #101318; overflow: hidden;
+    font: 13px/1.4 "Segoe UI", system-ui, sans-serif; color: #cfd8e3; }
+  #glcanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #panel { position: absolute; top: 10px; left: 10px; width: 240px; padding: 10px 12px;
+    background: rgba(16,20,28,.85); border: 1px solid #2a3342; border-radius: 8px;
+    backdrop-filter: blur(4px); user-select: none; }
+  #panel h1 { font-size: 14px; margin: 0 0 8px; color: #8fd0ff; }
+  .row { margin: 6px 0; }
+  .row label { display: flex; justify-content: space-between; margin-bottom: 2px; }
+  .row input[type=range] { width: 100%; }
+  .btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .btns button { flex: 1 1 30%; background: #1d2635; color: #cfd8e3; border: 1px solid #33405a;
+    border-radius: 4px; padding: 4px 2px; cursor: pointer; font-size: 12px; }
+  .btns button.active { background: #2f5f8f; border-color: #5a9bd8; color: #fff; }
+  #stats { margin-top: 8px; font-size: 11px; color: #7f8ca0; white-space: pre; }
+</style>
+</head>
+<body>
+<canvas id="glcanvas"></canvas>
+<div id="panel">
+  <h1>风洞毛发实验台 (WebGL2)</h1>
+  <div class="row"><label>毛长 <span id="v-len"></span></label>
+    <input id="p-len" type="range" min="0.2" max="2.0" step="0.01" value="1.0"></div>
+  <div class="row"><label>粗糙度 <span id="v-rough"></span></label>
+    <input id="p-rough" type="range" min="0.05" max="1.0" step="0.01" value="0.35"></div>
+  <div class="row"><label>风向角 <span id="v-wind"></span></label>
+    <input id="p-wind" type="range" min="0" max="360" step="1" value="40"></div>
+  <div class="row"><label>风力 <span id="v-windstr"></span></label>
+    <input id="p-windstr" type="range" min="0" max="1" step="0.01" value="0.45"></div>
+  <div class="row"><label>密度 <span id="v-density"></span></label>
+    <input id="p-density" type="range" min="0.1" max="1.0" step="0.01" value="1.0"></div>
+  <div class="btns">
+    <button id="b-side">侧光</button><button id="b-back">逆光</button><button id="b-graze">掠射</button>
+  </div>
+  <div class="btns">
+    <button id="b-lod-auto" class="active">自动LOD</button><button id="b-lod0">发丝</button>
+    <button id="b-lod1">发卡</button><button id="b-lod2">壳层</button><button id="b-compare">三层对比</button>
+  </div>
+  <div id="stats"></div>
+</div>
+<script type="module" src="dist/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "uid5-0007",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc", "shot": "node tools/shot.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christopher44007568/20261123.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Christopher44007568/20261123/issues"
+  },
+  "homepage": "https://github.com/Christopher44007568/20261123#readme",
+  "devDependencies": {
+    "playwright": "^1.65.1",
+    "typescript": "^7.0.2"
+  }
+}
