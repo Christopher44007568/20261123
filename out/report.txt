@@ -1,0 +1,21 @@
+scene: 24 primitives, 7 materials
+[pm-low] caustic map=115636 photons, global map=600000 photons
+[pm-low] photons emitted=1000000 stored=728720 (72.9%)
+[pm-low] caustic queries=54214744 avg query radius=0.1349 (max r: diffuse=0.25 glossy=0.08)
+[pm-low] time: photon trace=0.16s  hash build=0.05s  render=144.99s  total=145.19s
+[pm-high] caustic map=1394154 photons, global map=600000 photons
+[pm-high] photons emitted=12000000 stored=8734114 (72.8%)
+[pm-high] caustic queries=54214744 avg query radius=0.1157 (max r: diffuse=0.25 glossy=0.08)
+[pm-high] time: photon trace=3.63s  hash build=0.12s  render=780.57s  total=784.32s
+[pt-ref] spp=1024 time=102.38s
+[cmp low] caustic centroid: PM=(240.5,319.7) PT=(238.0,317.6) shift=3.29 px
+[cmp low] indirect RMSE (caustic ROI)=0.1406  (smooth ROI)=0.0349
+[cmp low] mean lum: caustic ROI PM=0.7260 PT=0.6998 | smooth ROI PM=0.0947 PT=0.0941
+[cmp low] brightness conservation PM/PT: caustic ROI=1.037  smooth ROI=1.007
+[cmp low] caustic edge sharpness: PM=0.0346 PT=0.1044 | stray spots (smooth ROI): PM=3 PT=0
+[cmp high] caustic centroid: PM=(241.0,320.0) PT=(238.0,317.6) shift=3.86 px
+[cmp high] indirect RMSE (caustic ROI)=0.1436  (smooth ROI)=0.0337
+[cmp high] mean lum: caustic ROI PM=0.7265 PT=0.6998 | smooth ROI PM=0.0946 PT=0.0941
+[cmp high] brightness conservation PM/PT: caustic ROI=1.038  smooth ROI=1.006
+[cmp high] caustic edge sharpness: PM=0.0726 PT=0.1044 | stray spots (smooth ROI): PM=2 PT=0
+[converge] edge sharpness low=0.0346 high=0.0726 | stray spots low=3 high=2
