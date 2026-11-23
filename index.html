@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070b0d" />
+    <title>Precision Stereo Repair Scope</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scope" aria-label="双目精密维修镜实时渲染画面"></canvas>
+      <header class="hud hud-top">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <div>
+            <p class="eyebrow">OPTICAL SERVICE SYSTEM · MK IV</p>
+            <h1>精密双目维修镜</h1>
+          </div>
+        </div>
+        <div class="status-cluster">
+          <span class="live-dot"></span>
+          <span id="frame-status">SYNC</span>
+          <span id="fps-status">60 FPS</span>
+        </div>
+      </header>
+      <aside class="hud telemetry">
+        <p class="eyebrow">STEREO TELEMETRY</p>
+        <dl>
+          <div><dt>瞳距</dt><dd id="ipd-readout">64.00 mm</dd></div>
+          <div><dt>探针齿轮</dt><dd id="probe-readout">护罩前</dd></div>
+          <div><dt>视差</dt><dd id="disparity-readout">+0.000 px</dd></div>
+          <div><dt>重投影</dt><dd id="reprojection-readout">测量中</dd></div>
+        </dl>
+        <div class="sync-lock">
+          <span>LEFT</span><span>SCENE T</span><span>RIGHT</span>
+          <b id="sync-left">—</b><b id="sync-time">—</b><b id="sync-right">—</b>
+        </div>
+      </aside>
+      <nav class="hud mode-bar" aria-label="查看模式">
+        <button data-mode="mono"><kbd>1</kbd>单眼</button>
+        <button data-mode="sbs" class="active"><kbd>2</kbd>并排</button>
+        <button data-mode="anaglyph"><kbd>3</kbd>红青</button>
+        <span class="rule"></span>
+        <button id="probe-toggle"><kbd>G</kbd>移动探针齿轮</button>
+      </nav>
+      <footer class="hud hud-bottom">
+        <div class="control-hint">
+          <span><kbd>拖动</kbd>偏航 / 俯仰</span>
+          <span><kbd>WASD</kbd>平移</span>
+          <span><kbd>R/F</kbd>前后</span>
+          <span><kbd>Q/E</kbd>滚转</span>
+        </div>
+        <p id="mode-caption">左右眼并排 · 非对称视锥 · 同一场景时间戳</p>
+      </footer>
+      <div id="boot-error" hidden></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
